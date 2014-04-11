@@ -31,19 +31,15 @@ import sys
 import rdflib
 import urllib2
 
-
-base_skos_url = "http://www.w3.org/2004/02/skos/core#"
-skos_preflabel = base_skos_url + 'prefLabel'
-base_who_url = "http://id.who.int/icd/release/10/2010"
-
+base_who_url = "http://id.who.int/icd/release/10/"
+graph = rdflib.Graph()
 def get_icd10(icd10_code):
-    url = "%s/%s" % (base_who_url, icd10_code)
-    graph = rdflib.Graph()
     rval = None
+    url = base_who_url + icd10_code
     try:
         graph.parse(url)
         rval = graph.preferredLabel(rdflib.term.URIRef(url))
-    except urllib2.HTTPError as e:
+    except urllib2.HTTPError:
         pass
     return rval[0][1] if rval else None
 
